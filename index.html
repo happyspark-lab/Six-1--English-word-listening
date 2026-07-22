@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>六上英语听写</title>
+    <style>
+        :root {
+            --primary:#0d9488;--primary-dark:#0f766e;--primary-light:#ccfbf1;
+            --accent:#f59e0b;--accent-light:#fef3c7;
+            --success:#10b981;--success-light:#d1fae5;
+            --danger:#ef4444;--danger-light:#fee2e2;
+            --bg:linear-gradient(135deg,#ecfeff 0%,#ccfbf1 50%,#dcfce7 100%);
+            --card:rgba(255,255,255,0.96);--text:#102a2a;--sub:#6b7280;
+            --border:rgba(13,148,136,0.16);--shadow:0 8px 32px rgba(13,148,136,0.16);
+        }
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+        body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",Arial,sans-serif;background:var(--bg);min-height:100vh;color:var(--text);padding:12px;}
+        .screen{display:none;}.screen.active{display:block;}
+        .card{background:var(--card);border-radius:20px;box-shadow:var(--shadow);border:1px solid var(--border);padding:22px 18px;}
+        .btn{border:none;border-radius:50px;font-weight:800;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:6px;}
+        .btn:active{transform:scale(0.96);}
+        .btn-primary{background:linear-gradient(135deg,#0d9488,#0f766e);color:white;padding:14px 24px;font-size:1.1rem;width:100%;box-shadow:0 6px 20px rgba(13,148,136,0.35);}
+        .btn-accent{background:linear-gradient(135deg,#f59e0b,#d97706);color:white;padding:14px 24px;font-size:1.1rem;width:100%;box-shadow:0 6px 20px rgba(245,158,11,0.35);}
+        input[type="text"]{width:100%;padding:14px 16px;border:2px solid #ccfbf1;border-radius:12px;font-size:1rem;outline:none;transition:border-color 0.2s;background:#f8fffd;}
+        input:focus{border-color:var(--primary);background:white;}
+        label{display:block;font-weight:700;margin-bottom:6px;color:#0f766e;font-size:0.9rem;}
+        .badge{display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:20px;font-size:0.8rem;font-weight:700;}
+        .badge-green{background:var(--success-light);color:#065f46;}
+        .badge-red{background:var(--danger-light);color:#991b1b;}
+        select{width:100%;padding:10px 12px;border:2px solid #ccfbf1;border-radius:10px;font-size:0.95rem;background:white;font-weight:700;color:var(--text);outline:none;}
+        select:focus{border-color:var(--primary);}
+        .divider{height:1px;background:#ccfbf1;margin:14px 0;}
+        .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+        .page-title{font-size:1.15rem;font-weight:800;color:var(--text);}
+        .back-btn{background:var(--primary-light);color:var(--primary-dark);border:none;border-radius:20px;padding:6px 14px;font-weight:700;font-size:0.85rem;cursor:pointer;}
+        /* LOGIN */
+        #screen-login{max-width:420px;margin:0 auto;padding-top:40px;}
+        .login-hero{text-align:center;margin-bottom:28px;}
+        .login-hero .emoji{font-size:4rem;margin-bottom:8px;display:block;}
+        .login-hero h1{font-size:1.8rem;color:var(--primary-dark);font-weight:900;}
+        .login-hero p{color:var(--sub);font-size:0.9rem;margin-top:4px;}
+        .user-list-title{font-size:0.8rem;color:var(--sub);margin-bottom:8px;}
+        .user-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;background:var(--primary-light);border-radius:20px;margin:4px;cursor:pointer;font-weight:700;color:var(--primary-dark);font-size:0.9rem;border:2px solid transparent;transition:all 0.15s;}
+        .user-chip:active{border-color:var(--primary);transform:scale(0.97);}
+        .ios-tip{background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:10px 12px;font-size:0.8rem;color:#9a3412;margin-bottom:12px;display:none;}
+
+        /* HOME */
+        #screen-home{max-width:480px;margin:0 auto;}
+        .home-topbar{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:8px;}
+        .stat-chip{flex:1;background:var(--card);border-radius:14px;padding:10px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer;border:1px solid var(--border);transition:all 0.15s;}
+        .stat-chip:active{transform:scale(0.97);}
+        .stat-chip .num{font-size:1.4rem;font-weight:900;color:var(--primary-dark);}
+        .stat-chip .lbl{font-size:0.65rem;color:var(--sub);margin-top:1px;}
+        .stat-streak .num{color:#d97706;}.stat-mastered .num{color:#059669;}.stat-error .num{color:#dc2626;}
+        .greeting-bar{display:flex;align-items:center;justify-content:space-between;background:var(--card);border-radius:14px;padding:12px 16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);margin-bottom:12px;border:1px solid var(--border);}
+        .greeting-name{font-size:1rem;font-weight:800;color:var(--text);}
+        .greeting-sub{font-size:0.75rem;color:var(--sub);margin-top:2px;}
+        .switch-user-btn{background:#ecfdf5;border:none;border-radius:20px;padding:6px 12px;font-size:0.75rem;font-weight:700;color:var(--sub);cursor:pointer;}
+        .selector-row{display:flex;gap:8px;margin-bottom:10px;}
+        .selector-row select{flex:1;}
+        .settings-row{display:flex;gap:8px;margin:12px 0;}
+        .setting-group{flex:1;background:#f0fdfa;border-radius:10px;padding:8px 6px;border:1px solid var(--border);text-align:center;}
+        .setting-group label{font-size:0.7rem;color:var(--sub);margin-bottom:3px;text-align:center;}
+        .setting-group select{font-size:0.85rem;padding:4px 2px;border:none;background:transparent;}
+        .review-quick-btn{width:100%;padding:15px 20px;background:linear-gradient(135deg,#f59e0b,#d97706);color:white;border:none;border-radius:14px;font-size:1.05rem;font-weight:800;cursor:pointer;box-shadow:0 6px 20px rgba(245,158,11,0.35);margin-bottom:10px;display:none;align-items:center;justify-content:space-between;}
+        .review-quick-btn .rqb-left{display:flex;align-items:center;gap:8px;}
+        .review-quick-btn .rqb-count{background:rgba(255,255,255,0.28);border-radius:20px;padding:3px 12px;font-size:0.9rem;font-weight:700;}
+        .review-alert{background:linear-gradient(135deg,#fef3c7,#fde68a);border:2px solid #f59e0b;border-radius:14px;padding:14px 16px;margin-bottom:12px;display:none;}
+        .review-alert-title{font-weight:800;color:#92400e;font-size:0.95rem;}
+        .review-alert-sub{font-size:0.8rem;color:#a16207;margin-top:4px;}
+        .preview-section{margin-top:10px;}
+        .preview-label{font-size:0.8rem;font-weight:700;color:var(--primary-dark);margin-bottom:8px;}
+        .preview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;max-height:300px;overflow-y:auto;}
+        .preview-item{background:white;border:1px solid var(--border);border-radius:10px;padding:12px 8px;text-align:center;}
+        .preview-item .word{font-size:2.4rem;font-weight:800;color:var(--text);word-break:break-all;line-height:1.3;}
+        .preview-item .cn{font-size:0.78rem;color:var(--sub);margin-top:4px;}
+        .preview-item .num{font-size:0.65rem;color:#aaa;display:block;margin-bottom:2px;}
+
+        /* RUNNING */
+        #screen-running{max-width:480px;margin:0 auto;}
+        .run-header{text-align:center;margin-bottom:12px;}
+        .run-unit-badge{background:var(--primary-light);color:var(--primary-dark);border-radius:20px;padding:5px 14px;font-size:0.8rem;font-weight:700;display:inline-block;}
+        .progress-wrap{margin:10px 0;}
+        .progress-bar{height:10px;background:#ccfbf1;border-radius:10px;overflow:hidden;}
+        .progress-fill{height:100%;background:linear-gradient(90deg,#0d9488,#34d399);width:0%;transition:width 0.3s ease-out;border-radius:10px;}
+        .progress-text{text-align:right;font-size:0.75rem;color:var(--sub);margin-top:3px;}
+        .word-stage{text-align:center;padding:20px 10px;}
+        .word-ordinal{font-size:0.85rem;color:var(--sub);margin-bottom:8px;}
+        .big-word{font-size:2.2rem;font-weight:900;color:var(--text);min-height:70px;letter-spacing:1px;word-break:break-all;line-height:1.3;}
+        .status-msg{color:var(--sub);font-size:0.9rem;margin-top:8px;min-height:24px;}
+        .countdown-ring{width:54px;height:54px;margin:10px auto;}
+        .countdown-ring svg{width:54px;height:54px;transform:rotate(-90deg);}
+        .countdown-ring circle{fill:none;stroke:#ccfbf1;stroke-width:5;}
+        .countdown-ring .arc{stroke:#0d9488;stroke-linecap:round;transition:stroke-dashoffset 0.1s linear;}
+        .countdown-num{position:relative;top:-42px;text-align:center;font-size:1.1rem;font-weight:900;color:var(--primary-dark);}
+        .run-btns{display:flex;gap:10px;margin-top:6px;}
+        .run-btn{flex:1;padding:11px;border-radius:12px;border:none;font-weight:700;font-size:0.9rem;cursor:pointer;}
+        .run-btn-pause{background:#ccfbf1;color:#0f766e;}
+        .run-btn-stop{background:#fee2e2;color:#b91c1c;}
+
+        /* RESULT */
+        #screen-result{max-width:480px;margin:0 auto;}
+        .result-hero{text-align:center;padding:16px 0 10px;}
+        .result-star{font-size:3rem;}
+        .result-title{font-size:1.3rem;font-weight:900;margin-top:6px;color:var(--primary-dark);}
+        .result-score{font-size:2.2rem;font-weight:900;color:var(--success);margin:6px 0;}
+        .result-streak{font-size:0.9rem;color:var(--sub);}
+        .result-encourage{background:linear-gradient(135deg,#ccfbf1,#dcfce7);border-radius:12px;padding:12px 16px;margin:12px 0;font-weight:700;color:#115e59;text-align:center;font-size:0.95rem;}
+        .answer-check-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:10px;}
+        .answer-check-item{background:white;border:2px solid #ccfbf1;border-radius:10px;padding:12px 8px;text-align:center;position:relative;}
+        .answer-check-item .word{font-size:2.4rem;font-weight:800;color:var(--text);word-break:break-all;line-height:1.3;}
+        .answer-check-item .cn{font-size:0.78rem;color:var(--sub);margin-top:4px;}
+        .answer-check-item .num{font-size:0.65rem;color:#aaa;display:block;margin-bottom:2px;}
+        .answer-check-item.wrong{border-color:#fca5a5;background:#fff1f2;}
+        .answer-check-item.wrong .word{color:#b91c1c;}
+        .check-box{position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:5px;border:2px solid #d1d5db;background:white;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.7rem;}
+        .check-box.checked{background:#fee2e2;border-color:#fca5a5;color:#b91c1c;}
+        .result-summary{display:flex;gap:10px;justify-content:center;margin:12px 0;}
+        .summary-chip{padding:8px 16px;border-radius:20px;font-weight:700;font-size:0.85rem;}
+
+        /* WORD LISTS */
+        #screen-mastered,#screen-errors{max-width:480px;margin:0 auto;}
+        .word-list-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;margin-top:10px;}
+        .word-card{background:white;border:1px solid var(--border);border-radius:10px;padding:10px 6px;text-align:center;}
+        .word-card .w{font-size:0.95rem;font-weight:800;color:var(--text);word-break:break-all;}
+        .word-card .wc{font-size:0.75rem;color:var(--sub);margin-top:3px;}
+        .word-card .cnt{font-size:0.7rem;color:var(--sub);margin-top:3px;}
+        .empty-tip{text-align:center;color:var(--sub);padding:30px;font-size:0.9rem;}
+
+        @keyframes popIn{0%{transform:scale(0.85);opacity:0}100%{transform:scale(1);opacity:1}}
+        @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+        .pop-in{animation:popIn 0.35s cubic-bezier(0.34,1.56,0.64,1) both;}
+        .shake{animation:shake 0.4s ease both;}
+        @media (min-width:768px){
+            body{padding:24px;}
+            #screen-login{max-width:520px;padding-top:56px;}
+            #screen-home,#screen-running,#screen-result,#screen-mastered,#screen-errors{max-width:760px;}
+            .card{padding:28px 26px;}
+            .preview-grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr));max-height:430px;}
+            .answer-check-grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr));}
+            .word-list-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));}
+            .big-word{font-size:3rem;min-height:92px;}
+        }
+        @media (min-width:1100px){
+            #screen-home,#screen-result,#screen-mastered,#screen-errors{max-width:960px;}
+            #screen-running{max-width:820px;}
+            .preview-grid{grid-template-columns:repeat(auto-fill,minmax(210px,1fr));}
+            .answer-check-grid{grid-template-columns:repeat(auto-fill,minmax(210px,1fr));}
+            .word-list-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));}
+        }
+    </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="screen-login" class="screen active">
+    <div class="login-hero">
+        <span class="emoji">🚀</span>
+        <h1>六上英语听写</h1>
+        <p>每天坚持，把单词和短语听熟！</p>
+    </div>
+    <div id="iosTip" class="ios-tip">📱 <b>iPhone用户：</b>请关闭侧边静音键，调大媒体音量再开始。</div>
+    <div class="card">
+        <div id="existing-users-box" style="display:none">
+            <div class="user-list-title">本设备已有账号，点击直接进入：</div>
+            <div id="user-chips"></div>
+            <div class="divider"></div>
+        </div>
+        <label>输入学号 ID</label>
+        <input type="text" id="login-id" placeholder="例如：S001" maxlength="20" onkeydown="if(event.key==='Enter') doLogin()">
+        <div style="font-size:0.78rem;color:var(--sub);margin:6px 0 14px;">首次输入学号会自动创建账号，数据保存在本设备。</div>
+        <button class="btn btn-primary" onclick="doLogin()">🎮 进入闯关</button>
+        <div id="login-error" style="color:#dc2626;font-size:0.85rem;margin-top:10px;text-align:center;display:none;"></div>
+    </div>
+</div>
+
+<!-- HOME -->
+<div id="screen-home" class="screen">
+    <div class="home-topbar">
+        <div class="stat-chip stat-streak"><div class="num" id="stat-streak">0</div><div class="lbl">🔥 坚持天数</div></div>
+        <div class="stat-chip stat-mastered" onclick="openScreen('screen-mastered')"><div class="num" id="stat-mastered">0</div><div class="lbl">⭐ 已掌握词</div></div>
+        <div class="stat-chip stat-error" onclick="openScreen('screen-errors')"><div class="num" id="stat-error">0</div><div class="lbl">📝 错题本</div></div>
+    </div>
+    <div class="greeting-bar">
+        <div>
+            <div class="greeting-name" id="greeting-name">Hi！</div>
+            <div class="greeting-sub" id="greeting-sub">今天也要加油哦！</div>
+        </div>
+        <button class="switch-user-btn" onclick="openScreen('screen-login')">切换账号</button>
+    </div>
+    <button class="review-quick-btn" id="review-quick-btn" onclick="startReviewDictation()">
+        <span class="rqb-left">🔥 练习错词</span>
+        <span class="rqb-count" id="review-quick-count">0个待练</span>
+    </button>
+    <div id="review-alert" class="review-alert">
+        <div class="review-alert-title">🎯 错误单词超过10个，建议先复习一下！</div>
+        <div class="review-alert-sub">点击下方按钮开始复习错词</div>
+        <button class="btn btn-accent" style="margin-top:10px;" onclick="startReviewDictation()">🔁 去复习错词</button>
+    </div>
+    <div class="card">
+        <div class="selector-row">
+            <select id="sel-grade" onchange="onGradeChange()"></select>
+            <select id="sel-unit"  onchange="onUnitChange()"></select>
+        </div>
+        <div class="settings-row">
+            <div class="setting-group"><label>🗣️ 语速</label>
+                <select id="set-rate"><option value="0.85">正常</option><option value="0.7" selected>稍慢</option><option value="0.55">较慢</option></select>
+            </div>
+            <div class="setting-group"><label>🔁 次数</label>
+                <select id="set-repeat"><option value="1">1次</option><option value="2" selected>2次</option><option value="3">3次</option></select>
+            </div>
+            <div class="setting-group"><label>✍️ 书写</label>
+                <select id="set-wait"><option value="5">5秒</option><option value="8" selected>8秒</option><option value="10">10秒</option><option value="12">12秒</option></select>
+            </div>
+            <div class="setting-group"><label>🔀 顺序</label>
+                <select id="set-order"><option value="order" selected>顺序</option><option value="random">随机</option></select>
+            </div>
+        </div>
+        <button class="btn btn-primary" onclick="startDictation()">🚀 开始听写</button>
+        <div class="preview-section">
+            <div class="divider"></div>
+            <div class="preview-label">📋 本单元内容预习</div>
+            <div class="preview-grid" id="preview-grid"></div>
+        </div>
+    </div>
+</div>
+
+<!-- RUNNING -->
+<div id="screen-running" class="screen">
+    <div class="card">
+        <div class="run-header"><span class="run-unit-badge" id="run-unit-name">Unit</span></div>
+        <div class="progress-wrap">
+            <div class="progress-bar"><div class="progress-fill" id="run-progress-fill"></div></div>
+            <div class="progress-text" id="run-progress-text">0 / 0</div>
+        </div>
+        <div class="word-stage">
+            <div class="word-ordinal" id="run-ordinal">第 1 个</div>
+            <div class="big-word" id="run-word">Ready</div>
+            <div class="status-msg" id="run-status">准备中...</div>
+            <div class="countdown-ring" id="countdown-wrap" style="display:none">
+                <svg viewBox="0 0 54 54">
+                    <circle cx="27" cy="27" r="22"/>
+                    <circle class="arc" id="countdown-arc" cx="27" cy="27" r="22" stroke-dasharray="138.2" stroke-dashoffset="0"/>
+                </svg>
+                <div class="countdown-num" id="countdown-num">8</div>
+            </div>
+        </div>
+        <div class="run-btns">
+            <button class="run-btn run-btn-pause" id="pause-btn" onclick="togglePause()">⏸ 暂停</button>
+            <button class="run-btn run-btn-stop" onclick="stopDictation()">⏹ 结束</button>
+        </div>
+    </div>
+</div>
+
+<!-- RESULT -->
+<div id="screen-result" class="screen">
+    <div class="card">
+        <div class="result-hero">
+            <div class="result-star" id="result-star">🌟</div>
+            <div class="result-title">听写完成！</div>
+            <div class="result-score" id="result-score">0分</div>
+            <div class="result-streak" id="result-streak"></div>
+        </div>
+        <div class="result-encourage" id="result-encourage">加油！继续坚持！</div>
+        <div class="result-summary">
+            <span class="summary-chip badge-green" id="sum-correct">✅ 0 个全对</span>
+            <span class="summary-chip badge-red" id="sum-wrong">❌ 0 个错误</span>
+        </div>
+        <div class="divider"></div>
+        <div style="font-weight:700;color:#0f766e;font-size:0.85rem;margin-bottom:6px;">📋 核对答案（点击打错）</div>
+        <div class="answer-check-grid" id="answer-check-grid"></div>
+        <div style="height:16px"></div>
+        <button class="btn btn-primary" id="submit-result-btn" onclick="submitAndReviewWrong()">✅ 提交结果</button>
+        <div style="height:10px"></div>
+        <button class="btn" style="background:#ecfdf5;color:#0f766e;padding:12px;width:100%;font-size:0.95rem;font-weight:700;" onclick="openScreen('screen-home')">🏠 返回主页</button>
+    </div>
+</div>
+
+<!-- MASTERED -->
+<div id="screen-mastered" class="screen">
+    <div class="card">
+        <div class="page-header"><div class="page-title">⭐ 已掌握单词</div><button class="back-btn" onclick="openScreen('screen-home')">返回</button></div>
+        <div id="mastered-content"></div>
+    </div>
+</div>
+
+<!-- ERRORS -->
+<div id="screen-errors" class="screen">
+    <div class="card">
+        <div class="page-header"><div class="page-title">📝 错题本</div><button class="back-btn" onclick="openScreen('screen-home')">返回</button></div>
+        <div id="errors-content"></div>
+        <div style="height:12px"></div>
+        <button class="btn btn-accent" id="error-review-btn" onclick="startReviewDictation()" style="display:none;">🔁 开始复习错词</button>
+    </div>
+</div>
+
+<script>
+window.onerror = function(msg,src,line){console.error('JS Error line '+line+': '+msg);};
+
+const TEXTBOOK_DATA = {
+    "SIX_UP": {
+        "gradeLabel": "六上英语听写",
+        "units": [
+            {
+                "name": "Unit 1 - 单词",
+                "words": [
+                    {
+                        "w": "breath",
+                        "cn": "呼吸"
+                    },
+                    {
+                        "w": "throw",
+                        "cn": "扔，抛"
+                    },
+                    {
+                        "w": "count",
+                        "cn": "数，计数"
+                    },
+                    {
+                        "w": "will",
+                        "cn": "将要；会"
+                    },
+                    {
+                        "w": "mad",
+                        "cn": "生气的"
+                    },
+                    {
+                        "w": "also",
+                        "cn": "也；此外"
+                    },
+                    {
+                        "w": "make",
+                        "cn": "制作"
+                    },
+                    {
+                        "w": "proud",
+                        "cn": "骄傲的，自豪的"
+                    }
+                ]
+            },
+            {
+                "name": "Unit 1 - 短语句型",
+                "words": [
+                    {
+                        "w": "yell and cry",
+                        "cn": "边哭边喊"
+                    },
+                    {
+                        "w": "go for a walk",
+                        "cn": "出去走走"
+                    },
+                    {
+                        "w": "shout bad words",
+                        "cn": "大声骂人"
+                    },
+                    {
+                        "w": "take a deep breath",
+                        "cn": "深呼吸"
+                    },
+                    {
+                        "w": "throw things",
+                        "cn": "扔东西"
+                    },
+                    {
+                        "w": "count to ten",
+                        "cn": "数到十"
+                    },
+                    {
+                        "w": "very angry",
+                        "cn": "非常生气"
+                    },
+                    {
+                        "w": "eat a lot",
+                        "cn": "吃很多"
+                    },
+                    {
+                        "w": "listen to some music",
+                        "cn": "听一点音乐"
+                    },
+                    {
+                        "w": "yell out loud",
+                        "cn": "大声喊叫"
+                    },
+                    {
+                        "w": "talk with friends on the phone",
+                        "cn": "与朋友通电话"
+                    },
+                    {
+                        "w": "calm down",
+                        "cn": "冷静，平静下来"
+                    },
+                    {
+                        "w": "solve the problem",
+                        "cn": "解决问题"
+                    },
+                    {
+                        "w": "I feel ...",
+                        "cn": "我觉得……"
+                    },
+                    {
+                        "w": "I don’t like it because ...",
+                        "cn": "我不喜欢它，因为……"
+                    },
+                    {
+                        "w": "I get ... when ...",
+                        "cn": "每当……时，我就会……"
+                    },
+                    {
+                        "w": "I got really ... because ...",
+                        "cn": "我真的很……，因为……"
+                    }
+                ]
+            },
+            {
+                "name": "Unit 2 - 单词",
+                "words": [
+                    {
+                        "w": "lion",
+                        "cn": "狮子"
+                    },
+                    {
+                        "w": "call",
+                        "cn": "称呼；喊"
+                    },
+                    {
+                        "w": "stop",
+                        "cn": "停止"
+                    },
+                    {
+                        "w": "joke",
+                        "cn": "玩笑"
+                    },
+                    {
+                        "w": "worse",
+                        "cn": "更糟糕的，更差的"
+                    },
+                    {
+                        "w": "homework",
+                        "cn": "作业"
+                    },
+                    {
+                        "w": "lie",
+                        "cn": "欺骗，撒谎"
+                    },
+                    {
+                        "w": "finish",
+                        "cn": "完成"
+                    },
+                    {
+                        "w": "record",
+                        "cn": "录制；记录"
+                    },
+                    {
+                        "w": "choose",
+                        "cn": "选择"
+                    },
+                    {
+                        "w": "their",
+                        "cn": "他们的"
+                    }
+                ]
+            },
+            {
+                "name": "Unit 2 - 短语句型",
+                "words": [
+                    {
+                        "w": "talk it out",
+                        "cn": "谈话和解"
+                    },
+                    {
+                        "w": "have a new haircut",
+                        "cn": "剪了个新发型"
+                    },
+                    {
+                        "w": "make fun of ...",
+                        "cn": "开某人的玩笑"
+                    },
+                    {
+                        "w": "call ... names",
+                        "cn": "给……起外号"
+                    },
+                    {
+                        "w": "yell at ...",
+                        "cn": "对……喊叫"
+                    },
+                    {
+                        "w": "fight with each other",
+                        "cn": "双方争吵"
+                    },
+                    {
+                        "w": "I feel ... when you ...",
+                        "cn": "当你……时，我觉得……"
+                    }
+                ]
+            },
+            {
+                "name": "Unit 3 - 单词",
+                "words": [
+                    {
+                        "w": "music",
+                        "cn": "音乐"
+                    },
+                    {
+                        "w": "try",
+                        "cn": "尝试"
+                    },
+                    {
+                        "w": "with",
+                        "cn": "和……一起"
+                    },
+                    {
+                        "w": "why",
+                        "cn": "为什么"
+                    },
+                    {
+                        "w": "bring",
+                        "cn": "提出；带来"
+                    },
+                    {
+                        "w": "might",
+                        "cn": "可能"
+                    },
+                    {
+                        "w": "cup",
+                        "cn": "杯子"
+                    },
+                    {
+                        "w": "dangerous",
+                        "cn": "危险的"
+                    }
+                ]
+            },
+            {
+                "name": "Unit 3 - 短语句型",
+                "words": [
+                    {
+                        "w": "bring up the problem",
+                        "cn": "提出问题"
+                    },
+                    {
+                        "w": "listen to each other",
+                        "cn": "彼此倾听"
+                    },
+                    {
+                        "w": "take turns to talk",
+                        "cn": "轮流交谈"
+                    },
+                    {
+                        "w": "come up with ideas",
+                        "cn": "提出想法"
+                    },
+                    {
+                        "w": "work it out together",
+                        "cn": "一起想办法解决"
+                    },
+                    {
+                        "w": "finish homework",
+                        "cn": "完成作业"
+                    },
+                    {
+                        "w": "Can I talk to you?",
+                        "cn": "我可以和你谈谈吗？"
+                    },
+                    {
+                        "w": "I understand.",
+                        "cn": "我明白。"
+                    },
+                    {
+                        "w": "But it will help me ...",
+                        "cn": "但它会帮我……"
+                    },
+                    {
+                        "w": "Maybe I can ... first?",
+                        "cn": "也许我可以先……？"
+                    },
+                    {
+                        "w": "Good idea!",
+                        "cn": "好主意！"
+                    },
+                    {
+                        "w": "Do you have a minute?",
+                        "cn": "你有时间吗？"
+                    },
+                    {
+                        "w": "I understand your worries, but ...",
+                        "cn": "我理解你的担心，但是……"
+                    },
+                    {
+                        "w": "That makes sense.",
+                        "cn": "那有道理。"
+                    },
+                    {
+                        "w": "Maybe we can ...",
+                        "cn": "或许我们可以……"
+                    },
+                    {
+                        "w": "Or ... is that okay?",
+                        "cn": "或许……可以吗？"
+                    }
+                ]
+            },
+            {
+                "name": "Unit 4 - 单词",
+                "words": [
+                    {
+                        "w": "play",
+                        "cn": "玩"
+                    },
+                    {
+                        "w": "stay",
+                        "cn": "停留；保持"
+                    },
+                    {
+                        "w": "toy",
+                        "cn": "玩具"
+                    },
+                    {
+                        "w": "dig",
+                        "cn": "挖掘"
+                    },
+                    {
+                        "w": "least",
+                        "cn": "至少，最少"
+                    },
+                    {
+                        "w": "habit",
+                        "cn": "习性，习惯"
+                    },
+                    {
+                        "w": "between",
+                        "cn": "在……之间"
+                    },
+                    {
+                        "w": "building",
+                        "cn": "建筑物"
+                    },
+                    {
+                        "w": "free",
+                        "cn": "免费的；空闲的；自由的"
+                    },
+                    {
+                        "w": "clock",
+                        "cn": "钟表"
+                    },
+                    {
+                        "w": "notebook",
+                        "cn": "笔记本"
+                    },
+                    {
+                        "w": "cost",
+                        "cn": "花费"
+                    },
+                    {
+                        "w": "cheap",
+                        "cn": "便宜"
+                    },
+                    {
+                        "w": "glove",
+                        "cn": "手套"
+                    },
+                    {
+                        "w": "sometimes",
+                        "cn": "有时候"
+                    },
+                    {
+                        "w": "little",
+                        "cn": "少量的；小的"
+                    }
+                ]
+            },
+            {
+                "name": "Unit 4 - 短语句型",
+                "words": [
+                    {
+                        "w": "play during the night",
+                        "cn": "在夜间玩耍"
+                    },
+                    {
+                        "w": "stay inside",
+                        "cn": "待在室内"
+                    },
+                    {
+                        "w": "sleep during the day",
+                        "cn": "白天睡觉"
+                    },
+                    {
+                        "w": "don’t like to be alone",
+                        "cn": "不喜欢独处"
+                    },
+                    {
+                        "w": "lose hair",
+                        "cn": "掉毛"
+                    },
+                    {
+                        "w": "love playing with toys",
+                        "cn": "喜欢玩玩具"
+                    },
+                    {
+                        "w": "very busy at work",
+                        "cn": "工作很忙"
+                    },
+                    {
+                        "w": "an animal lover",
+                        "cn": "一个动物爱好者"
+                    },
+                    {
+                        "w": "a light sleeper",
+                        "cn": "一个睡得浅的人"
+                    },
+                    {
+                        "w": "like to go to the park",
+                        "cn": "喜欢去公园"
+                    },
+                    {
+                        "w": "go to school early",
+                        "cn": "上学很早"
+                    },
+                    {
+                        "w": "far away",
+                        "cn": "很远"
+                    },
+                    {
+                        "w": "... and ... are different because ...",
+                        "cn": "……和……不同，因为……"
+                    },
+                    {
+                        "w": "Good point!",
+                        "cn": "说得对！"
+                    },
+                    {
+                        "w": "They both love ...",
+                        "cn": "他们都喜欢……"
+                    },
+                    {
+                        "w": "They are both ...",
+                        "cn": "他们都……"
+                    },
+                    {
+                        "w": "... are ..., while ... are ...",
+                        "cn": "……是……样的，但……却是……样的。"
+                    },
+                    {
+                        "w": "I agree.",
+                        "cn": "我同意。"
+                    },
+                    {
+                        "w": "I don’t agree because ...",
+                        "cn": "我不同意，因为……"
+                    },
+                    {
+                        "w": "I think it’s better to ...",
+                        "cn": "我认为……更好。"
+                    }
+                ]
+            },
+            {
+                "name": "Unit 5 - 单词",
+                "words": [
+                    {
+                        "w": "wait",
+                        "cn": "等待"
+                    },
+                    {
+                        "w": "learn",
+                        "cn": "学习"
+                    },
+                    {
+                        "w": "bike",
+                        "cn": "自行车"
+                    },
+                    {
+                        "w": "money",
+                        "cn": "钱"
+                    },
+                    {
+                        "w": "online",
+                        "cn": "在线的，网上的"
+                    },
+                    {
+                        "w": "noon",
+                        "cn": "中午"
+                    },
+                    {
+                        "w": "change",
+                        "cn": "改变"
+                    },
+                    {
+                        "w": "menu",
+                        "cn": "菜单"
+                    },
+                    {
+                        "w": "classmate",
+                        "cn": "同学"
+                    },
+                    {
+                        "w": "helpful",
+                        "cn": "有帮助的，有益的"
+                    },
+                    {
+                        "w": "fourth",
+                        "cn": "第四"
+                    },
+                    {
+                        "w": "fifth",
+                        "cn": "第五"
+                    },
+                    {
+                        "w": "difference",
+                        "cn": "不同"
+                    }
+                ]
+            },
+            {
+                "name": "Unit 5 - 短语句型",
+                "words": [
+                    {
+                        "w": "shop smart",
+                        "cn": "理智购物"
+                    },
+                    {
+                        "w": "think about it more",
+                        "cn": "多考虑一下"
+                    },
+                    {
+                        "w": "wait a few days",
+                        "cn": "等几天"
+                    },
+                    {
+                        "w": "learn about it",
+                        "cn": "了解它"
+                    },
+                    {
+                        "w": "look for a better deal",
+                        "cn": "寻找更划算的交易"
+                    },
+                    {
+                        "w": "give it a try",
+                        "cn": "试一试"
+                    },
+                    {
+                        "w": "compare and choose",
+                        "cn": "比较并选择"
+                    },
+                    {
+                        "w": "buy one get one free",
+                        "cn": "买一送一"
+                    },
+                    {
+                        "w": "a jump rope",
+                        "cn": "一个跳绳"
+                    },
+                    {
+                        "w": "Wait a minute.",
+                        "cn": "等一下。"
+                    },
+                    {
+                        "w": "Do I really need it?",
+                        "cn": "我真的需要它吗？"
+                    },
+                    {
+                        "w": "Do I just want it?",
+                        "cn": "我是否只是想要它？"
+                    },
+                    {
+                        "w": "Do I need that thing right now?",
+                        "cn": "我现在需要那个东西吗？"
+                    },
+                    {
+                        "w": "Is it the best deal?",
+                        "cn": "这是最好的交易吗？"
+                    }
+                ]
+            },
+            {
+                "name": "Unit 6 - 单词",
+                "words": [
+                    {
+                        "w": "much",
+                        "cn": "许多，大量"
+                    },
+                    {
+                        "w": "orange",
+                        "cn": "橙色的；橙子"
+                    },
+                    {
+                        "w": "push",
+                        "cn": "推"
+                    },
+                    {
+                        "w": "please",
+                        "cn": "请"
+                    },
+                    {
+                        "w": "waste",
+                        "cn": "垃圾；浪费"
+                    },
+                    {
+                        "w": "snack",
+                        "cn": "零食，小吃"
+                    },
+                    {
+                        "w": "tool",
+                        "cn": "工具"
+                    },
+                    {
+                        "w": "basket",
+                        "cn": "篮子"
+                    },
+                    {
+                        "w": "potato",
+                        "cn": "土豆"
+                    }
+                ]
+            },
+            {
+                "name": "Unit 6 - 短语句型",
+                "words": [
+                    {
+                        "w": "give too much food",
+                        "cn": "给太多食物"
+                    },
+                    {
+                        "w": "food waste",
+                        "cn": "厨余垃圾"
+                    },
+                    {
+                        "w": "take too much food",
+                        "cn": "拿太多食物"
+                    },
+                    {
+                        "w": "be picky about food",
+                        "cn": "挑食"
+                    },
+                    {
+                        "w": "eat snacks",
+                        "cn": "吃零食"
+                    },
+                    {
+                        "w": "rush out to play",
+                        "cn": "冲出去玩"
+                    },
+                    {
+                        "w": "canteen staff",
+                        "cn": "食堂员工"
+                    },
+                    {
+                        "w": "have a good breakfast",
+                        "cn": "早餐吃得好"
+                    },
+                    {
+                        "w": "take less food",
+                        "cn": "少拿点食物"
+                    },
+                    {
+                        "w": "change the menu",
+                        "cn": "更换菜单"
+                    },
+                    {
+                        "w": "try all kinds of foods",
+                        "cn": "尝试各种食物"
+                    },
+                    {
+                        "w": "save food for later",
+                        "cn": "留些食物晚些吃"
+                    },
+                    {
+                        "w": "It’s not good to ...",
+                        "cn": "……是很不好的。"
+                    },
+                    {
+                        "w": "We found that ...",
+                        "cn": "我们发现……"
+                    },
+                    {
+                        "w": "The reason is ...",
+                        "cn": "原因是……"
+                    },
+                    {
+                        "w": "This happens because ...",
+                        "cn": "发生这种情况是因为……"
+                    }
+                ]
+            },
+            {
+                "name": "Unit 7 - 单词",
+                "words": [
+                    {
+                        "w": "either",
+                        "cn": "也；（两者中的）任何一个"
+                    },
+                    {
+                        "w": "break",
+                        "cn": "休息，间歇；打破"
+                    },
+                    {
+                        "w": "right",
+                        "cn": "恰当的；对的；右边的"
+                    },
+                    {
+                        "w": "playground",
+                        "cn": "操场"
+                    },
+                    {
+                        "w": "yesterday",
+                        "cn": "昨天"
+                    },
+                    {
+                        "w": "important",
+                        "cn": "重要的"
+                    },
+                    {
+                        "w": "without",
+                        "cn": "没有"
+                    },
+                    {
+                        "w": "hospital",
+                        "cn": "医院"
+                    },
+                    {
+                        "w": "rest",
+                        "cn": "休息"
+                    },
+                    {
+                        "w": "another",
+                        "cn": "另一个"
+                    },
+                    {
+                        "w": "team",
+                        "cn": "团队"
+                    },
+                    {
+                        "w": "watch",
+                        "cn": "观察；看"
+                    }
+                ]
+            },
+            {
+                "name": "Unit 7 - 短语句型",
+                "words": [
+                    {
+                        "w": "drink enough water",
+                        "cn": "喝足量的水"
+                    },
+                    {
+                        "w": "take water breaks",
+                        "cn": "休息下，喝点水"
+                    },
+                    {
+                        "w": "warm up",
+                        "cn": "热身"
+                    },
+                    {
+                        "w": "wear the right shoes",
+                        "cn": "穿合适的鞋子"
+                    },
+                    {
+                        "w": "work with your teammates",
+                        "cn": "和队友合作"
+                    },
+                    {
+                        "w": "watch out for others on the playground",
+                        "cn": "在操场上小心他人"
+                    },
+                    {
+                        "w": "don’t play if you are hurt",
+                        "cn": "受伤了就别运动"
+                    },
+                    {
+                        "w": "follow the rules",
+                        "cn": "遵守规则"
+                    },
+                    {
+                        "w": "learn a lesson",
+                        "cn": "得到教训；获得经验"
+                    },
+                    {
+                        "w": "We should ... before ...",
+                        "cn": "在……之前，我们应该……"
+                    },
+                    {
+                        "w": "Tell me what happened.",
+                        "cn": "告诉我发生了什么。"
+                    },
+                    {
+                        "w": "First things first, make sure to ...",
+                        "cn": "首先，一定确保……"
+                    },
+                    {
+                        "w": "Also, don’t forget to ...",
+                        "cn": "还有，别忘了……"
+                    },
+                    {
+                        "w": "What’s more, it’s a good idea to ...",
+                        "cn": "另外，……也是个好办法。"
+                    },
+                    {
+                        "w": "One last thing, ...",
+                        "cn": "最后一件事，……"
+                    },
+                    {
+                        "w": "How are you feeling?",
+                        "cn": "你感觉怎么样？"
+                    },
+                    {
+                        "w": "How did this happen?",
+                        "cn": "这是怎么发生的？"
+                    },
+                    {
+                        "w": "Does it hurt?",
+                        "cn": "疼吗？"
+                    },
+                    {
+                        "w": "Don’t worry.",
+                        "cn": "别担心。"
+                    },
+                    {
+                        "w": "Let me see.",
+                        "cn": "让我看看。"
+                    },
+                    {
+                        "w": "Let me take a closer look.",
+                        "cn": "让我仔细看看。"
+                    }
+                ]
+            },
+            {
+                "name": "Review - 单词",
+                "words": [
+                    {
+                        "w": "lonely",
+                        "cn": "孤单的"
+                    },
+                    {
+                        "w": "garden",
+                        "cn": "花园"
+                    }
+                ]
+            },
+            {
+                "name": "Review - 短语句型",
+                "words": [
+                    {
+                        "w": "stay healthy",
+                        "cn": "保持健康"
+                    },
+                    {
+                        "w": "have a sweet tooth",
+                        "cn": "爱吃甜食"
+                    },
+                    {
+                        "w": "build good habits",
+                        "cn": "养成好习惯"
+                    },
+                    {
+                        "w": "get some sunshine",
+                        "cn": "晒晒太阳"
+                    },
+                    {
+                        "w": "If you ask me, I’d say ...",
+                        "cn": "如果你问我的话，我会说……"
+                    },
+                    {
+                        "w": "How’s it going?",
+                        "cn": "最近怎么样？"
+                    }
+                ]
+            }
+        ]
+    }
+};
+
+// ===== 状态 =====
+let currentUser=null,userData={};
+let sessionWords=[],sessionIndex=0,isRunning=false,isPaused=false,isReviewMode=false,speechInterrupted=false;
+let wrongInSession=[],sessionUnitKey="",isImmediateReviewMode=false;
+const synth=window.speechSynthesis||null;
+let currentUtterance=null,usVoice=null;
+
+function loadVoices(){
+    if(!synth)return;
+    try{
+        const v=synth.getVoices();
+        usVoice=v.find(x=>x.lang==='en-US'&&x.name.toLowerCase().includes('google'))||
+                v.find(x=>x.lang==='en-US'&&x.name.includes('Samantha'))||
+                v.find(x=>x.lang==='en-US'&&x.name.includes('Zira'))||
+                v.find(x=>x.lang==='en-US')||v.find(x=>x.lang.startsWith('en'));
+    }catch(e){}
+}
+try{loadVoices();}catch(e){}
+try{if(synth&&synth.onvoiceschanged!==undefined)synth.onvoiceschanged=loadVoices;}catch(e){}
+
+function saveData(){try{localStorage.setItem('sixup_userData',JSON.stringify(userData));}catch(e){}}
+function loadAllData(){try{userData=JSON.parse(localStorage.getItem('sixup_userData')||'{}');}catch(e){userData={};}}
+function ensureUser(uid){
+    if(!userData[uid]){userData[uid]={name:'',joinDate:todayStr(),lastDictDate:'',streak:0,masteredWords:{},errorWords:{},sessionHistory:[]};}
+    return userData[uid];
+}
+function getUserData(){return ensureUser(currentUser.id);}
+function todayStr(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+function openScreen(id){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0,0);
+    if(id==='screen-login'){document.getElementById('login-id').value='';document.getElementById('login-error').style.display='none';initLoginScreen();}
+    if(id==='screen-home')renderHome();
+    if(id==='screen-mastered')renderMastered();
+    if(id==='screen-errors')renderErrors();
+}
+
+function initLoginScreen(){
+    loadAllData();
+    const chips=document.getElementById('user-chips');
+    const box=document.getElementById('existing-users-box');
+    const users=Object.entries(userData).filter(([k])=>k!=='__meta');
+    if(users.length>0){
+        box.style.display='block';
+        chips.innerHTML=users.map(([id,u])=>`<span class="user-chip" onclick="quickLogin('${id}')">👤 ${u.name||id}</span>`).join('');
+    }else{box.style.display='none';}
+}
+function quickLogin(uid){const u=userData[uid];if(!u)return;currentUser={id:uid,name:u.name||uid};afterLogin();}
+function doLogin(){
+    try{
+        var id=document.getElementById('login-id').value.trim().toUpperCase();
+        if(!id){document.getElementById('login-error').textContent='请输入学号';document.getElementById('login-error').style.display='block';return;}
+        try{userData=JSON.parse(localStorage.getItem('sixup_userData')||'{}');}catch(e){userData={};}
+        if(!userData[id]){userData[id]={name:id,joinDate:todayStr(),lastDictDate:'',streak:0,masteredWords:{},errorWords:{},sessionHistory:[]};try{localStorage.setItem('sixup_userData',JSON.stringify(userData));}catch(e){}}
+        currentUser={id:id,name:userData[id].name||id};
+        document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+        document.getElementById('screen-home').classList.add('active');
+        window.scrollTo(0,0);renderHome();
+    }catch(err){document.getElementById('login-error').textContent='出错了：'+err.message;document.getElementById('login-error').style.display='block';}
+}
+function afterLogin(){saveData();openScreen('screen-home');}
+
+function renderHome(){
+    const ud=getUserData();
+    const mc=Object.values(ud.masteredWords).filter(v=>v.mastered).length;
+    const ec=Object.keys(ud.errorWords).length;
+    document.getElementById('stat-streak').textContent=ud.streak;
+    document.getElementById('stat-mastered').textContent=mc;
+    document.getElementById('stat-error').textContent=ec;
+    document.getElementById('greeting-name').textContent=`Hi，${ud.name||currentUser.name}！👋`;
+    document.getElementById('greeting-sub').textContent=ud.streak>1?`已坚持 ${ud.streak} 天，继续加油！`:'今天也要加油哦！';
+    document.getElementById('review-alert').style.display=ec>=10?'block':'none';
+    const rqBtn=document.getElementById('review-quick-btn');
+    if(ec>0){rqBtn.style.display='flex';document.getElementById('review-quick-count').textContent=`${ec}个待练`;}
+    else{rqBtn.style.display='none';}
+    if(document.getElementById('sel-grade').options.length===0){initSelectors();}else{updatePreview();}
+}
+function updateStreak(ud){
+    const today=todayStr();
+    if(ud.lastDictDate===today)return;
+    const y=new Date();y.setDate(y.getDate()-1);
+    const yStr=`${y.getFullYear()}-${String(y.getMonth()+1).padStart(2,'0')}-${String(y.getDate()).padStart(2,'0')}`;
+    ud.streak=ud.lastDictDate===yStr?(ud.streak||0)+1:1;
+    ud.lastDictDate=today;
+}
+function initSelectors(){
+    const g=document.getElementById('sel-grade');g.innerHTML='';
+    Object.keys(TEXTBOOK_DATA).forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=TEXTBOOK_DATA[k].gradeLabel;g.appendChild(o);});
+    onGradeChange();
+}
+function onGradeChange(){
+    const grade=document.getElementById('sel-grade').value;
+    const u=document.getElementById('sel-unit');u.innerHTML='';
+    TEXTBOOK_DATA[grade].units.forEach((x,i)=>{const o=document.createElement('option');o.value=i;o.textContent=x.name;u.appendChild(o);});
+    updatePreview();
+}
+function onUnitChange(){updatePreview();}
+function updatePreview(){
+    const grade=document.getElementById('sel-grade').value;
+    const ui=parseInt(document.getElementById('sel-unit').value);
+    const words=TEXTBOOK_DATA[grade]?.units[ui]?.words||[];
+    document.getElementById('preview-grid').innerHTML=words.map((item,i)=>{
+        const w=typeof item==='object'?item.w:item;
+        const cn=typeof item==='object'?item.cn:'';
+        return `<div class="preview-item"><span class="num">${i+1}</span><div class="word">${w}</div>${cn?`<div class="cn">${cn}</div>`:''}</div>`;
+    }).join('');
+}
+
+function unlockAudio(){
+    if(!synth)return;
+    try{const u=new SpeechSynthesisUtterance('');synth.speak(u);synth.cancel();}catch(e){}
+    if(!usVoice){try{const v=synth.getVoices();usVoice=v.find(x=>x.lang==='en-US')||v.find(x=>x.lang.startsWith('en'))||v[0]||null;}catch(e){}}
+}
+function startDictation(){
+    unlockAudio();
+    const grade=document.getElementById('sel-grade').value;
+    const ui=parseInt(document.getElementById('sel-unit').value);
+    const unit=TEXTBOOK_DATA[grade].units[ui];
+    const orderMode=document.getElementById('set-order').value;
+    isReviewMode=false,speechInterrupted=false;isImmediateReviewMode=false;
+    let words=unit.words.map(item=>typeof item==='object'?item:{w:item,cn:''});
+    if(orderMode==='random'){words=[...words];for(let i=words.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[words[i],words[j]]=[words[j],words[i]];}}
+    sessionWords=words;sessionUnitKey=`${grade}__${ui}`;
+    document.getElementById('run-unit-name').textContent=unit.name+(orderMode==='random'?' 🔀':'');
+    openScreen('screen-running');runDictation();
+}
+function startReviewDictation(){
+    unlockAudio();
+    const ud=getUserData();
+    const errWords=Object.keys(ud.errorWords);
+    if(errWords.length===0){alert('错题本是空的！');return;}
+    isReviewMode=true;isImmediateReviewMode=false;
+    const allWords={};
+    Object.values(TEXTBOOK_DATA).forEach(g=>g.units.forEach(u=>u.words.forEach(item=>{const w=typeof item==='object'?item.w:item;const cn=typeof item==='object'?item.cn:'';allWords[w]=cn;})));
+    sessionWords=errWords.map(w=>({w,cn:allWords[w]||''}));
+    sessionUnitKey='__review__';
+    document.getElementById('run-unit-name').textContent='🔁 错词复习';
+    openScreen('screen-running');runDictation();
+}
+
+async function runDictation(){
+    isRunning=true;isPaused=false;sessionIndex=0;wrongInSession=[];
+    const wordEl=document.getElementById('run-word');
+    const statusEl=document.getElementById('run-status');
+    const ordinalEl=document.getElementById('run-ordinal');
+    const total=sessionWords.length;
+    if(synth){synth.cancel();const w=new SpeechSynthesisUtterance('');synth.speak(w);}
+    statusEl.textContent='准备开始...';
+    for(let i=3;i>0;i--){wordEl.textContent=i;await sleep(900);}
+    wordEl.textContent='';
+    while(sessionIndex<total&&isRunning){
+        updateRunProgress();
+        await waitWhilePaused();
+        if(!isRunning)break;
+        const word=sessionWords[sessionIndex];
+        const wordText=typeof word==='object'?word.w:word;
+        const wordCn=typeof word==='object'?word.cn:'';
+        ordinalEl.textContent=`第 ${sessionIndex+1} 个 / 共 ${total} 个`;
+        wordEl.style.animation='none';wordEl.offsetHeight;wordEl.style.animation='popIn 0.35s both';
+        wordEl.textContent=wordCn||`#${sessionIndex+1}`;wordEl.style.color=wordCn?'#0f766e':'#6b7280';
+        statusEl.textContent='🔊 朗读中...';
+        const repeat=parseInt(document.getElementById('set-repeat').value);
+        for(let r=0;r<repeat;r++){await waitWhilePaused();if(!isRunning)break;await speakWhileActive(wordText);if(r<repeat-1)await sleep(1000);}
+        if(!isRunning)break;
+        wordEl.style.color=wordCn?'#0f766e':'#ccfbf1';statusEl.textContent='✍️ 书写中...';
+        await runCountdown(parseInt(document.getElementById('set-wait').value));
+        sessionIndex++;
+    }
+    if(isRunning)showResult();
+}
+async function runCountdown(seconds){
+    const wrap=document.getElementById('countdown-wrap');
+    const arcEl=document.getElementById('countdown-arc');
+    const numEl=document.getElementById('countdown-num');
+    const total_ms=seconds*1000;const R=22,C=2*Math.PI*R;
+    wrap.style.display='block';arcEl.style.strokeDasharray=C;arcEl.style.strokeDashoffset=0;
+    const start=Date.now();let pausedTotal=0;
+    while(true){
+        if(!isRunning)break;if(isPaused){const pausedAt=Date.now();await waitWhilePaused();pausedTotal+=Date.now()-pausedAt;}
+        const elapsed=Date.now()-start-pausedTotal;const remain=Math.max(0,total_ms-elapsed);
+        arcEl.style.strokeDashoffset=C*(1-remain/total_ms);numEl.textContent=Math.ceil(remain/1000);
+        if(remain<=0)break;await sleep(80);
+    }
+    wrap.style.display='none';
+}
+function updateRunProgress(){
+    const total=sessionWords.length,pct=(sessionIndex/total)*100;
+    document.getElementById('run-progress-fill').style.width=pct+'%';
+    document.getElementById('run-progress-text').textContent=`${sessionIndex} / ${total}`;
+}
+async function waitWhilePaused(){while(isPaused&&isRunning)await sleep(200);}
+async function speakWhileActive(text){do{await waitWhilePaused();if(!isRunning)return;speechInterrupted=false;await speakWord(text);}while(speechInterrupted&&isRunning);}
+function togglePause(){
+    isPaused=!isPaused;
+    const btn=document.getElementById('pause-btn');
+    if(isPaused){speechInterrupted=true;if(currentUtterance&&currentUtterance.onerror)currentUtterance.onerror();if(synth)synth.cancel();btn.textContent='▶ 继续';document.getElementById('run-status').textContent='⏸ 已暂停';}
+    else{btn.textContent='⏸ 暂停';}
+}
+function stopDictation(){
+    if(confirm('确定要提前结束吗？')){isRunning=false;if(synth)synth.cancel();openScreen('screen-home');}
+}
+function speakWord(text){
+    return new Promise(resolve=>{
+        if(!synth){setTimeout(resolve,800);return;}
+        if(!usVoice){try{const v=synth.getVoices();usVoice=v.find(x=>x.lang==='en-US')||v.find(x=>x.lang.startsWith('en'))||v[0]||null;}catch(e){}}
+        synth.cancel();
+        const u=new SpeechSynthesisUtterance(text);
+        u.lang='en-US';u.rate=parseFloat(document.getElementById('set-rate').value);u.pitch=1.0;
+        if(usVoice)u.voice=usVoice;
+        currentUtterance=u;
+        u.onend=()=>{currentUtterance=null;resolve();};
+        u.onerror=()=>{currentUtterance=null;resolve();};
+        synth.speak(u);
+        const timeout=Math.max(5000,text.length*600);
+        setTimeout(()=>{if(currentUtterance===u){currentUtterance=null;resolve();}},timeout);
+    });
+}
+
+function showResult(){
+    openScreen('screen-result');isRunning=false;
+    document.getElementById('answer-check-grid').innerHTML=sessionWords.map((item,i)=>{
+        const w=typeof item==='object'?item.w:item;
+        const cn=typeof item==='object'?item.cn:'';
+        return `<div class="answer-check-item" id="aci-${i}"><span class="num">${i+1}</span><div class="word">${w}</div>${cn?`<div class="cn">${cn}</div>`:''}<div class="check-box" id="cb-${i}" onclick="toggleWrong(${i})"></div></div>`;
+    }).join('');
+    updateResultSummary();
+    const ud=getUserData();
+    document.getElementById('result-streak').textContent=`🔥 今天是你坚持的第 ${ud.streak} 天`;
+    refreshEncourage(0,sessionWords.length);
+}
+function toggleWrong(idx){
+    const item=document.getElementById(`aci-${idx}`);
+    const cb=document.getElementById(`cb-${idx}`);
+    const word=typeof sessionWords[idx]==='object'?sessionWords[idx].w:sessionWords[idx];
+    const isNowWrong=!item.classList.contains('wrong');
+    item.classList.toggle('wrong',isNowWrong);cb.classList.toggle('checked',isNowWrong);cb.textContent=isNowWrong?'✗':'';
+    if(isNowWrong){if(!wrongInSession.includes(word))wrongInSession.push(word);}
+    else{wrongInSession=wrongInSession.filter(w=>w!==word);}
+    updateResultSummary();
+}
+function updateResultSummary(){
+    const wrong=wrongInSession.length,correct=sessionWords.length-wrong;
+    const score=Math.round((correct/sessionWords.length)*100);
+    document.getElementById('result-score').textContent=score+'分';
+    document.getElementById('sum-correct').textContent=`✅ ${correct} 个全对`;
+    document.getElementById('sum-wrong').textContent=`❌ ${wrong} 个错误`;
+    document.getElementById('result-star').textContent=score>=90?'🌟':score>=70?'🎉':'💪';
+    document.getElementById('submit-result-btn').textContent=(!isImmediateReviewMode&&wrong>0)?'🔁 提交并立即听写错题':'✅ 提交结果';
+    refreshEncourage(wrong,sessionWords.length);
+}
+function refreshEncourage(wrong,total){
+    const ud=getUserData();
+    let msg=wrong===0?`太棒了！全部正确！你是单词大师！🏆`:
+            wrong<=2?`非常好！只错了 ${wrong} 个，继续加油！😊`:
+            wrong<=total*0.3?`不错哦！已经坚持了 ${ud.streak} 天，为你点赞！⭐`:
+            `没关系，多练几次就记住啦！坚持就是胜利！💪`;
+    document.getElementById('result-encourage').textContent=msg;
+}
+function saveResultToBook(){
+    const ud=getUserData();
+    wrongInSession.forEach(w=>{ud.errorWords[w]=(ud.errorWords[w]||0)+1;if(ud.masteredWords[w])delete ud.masteredWords[w];});
+    sessionWords.forEach(item=>{
+        const w=typeof item==='object'?item.w:item;
+        if(wrongInSession.includes(w))return;
+        if(!ud.masteredWords[w])ud.masteredWords[w]={correctStreak:0};
+        ud.masteredWords[w].correctStreak=(ud.masteredWords[w].correctStreak||0)+1;
+        if(ud.masteredWords[w].correctStreak>=2){ud.masteredWords[w].mastered=true;delete ud.errorWords[w];}
+    });
+    updateStreak(ud);saveData();
+}
+function submitAndReviewWrong(){
+    const words=[...wrongInSession];
+    if(words.length===0||isImmediateReviewMode){saveResultToBook();isImmediateReviewMode=false;openScreen('screen-home');return;}
+    const cnMap=buildCnMap();
+    saveResultToBook();
+    sessionWords=words.map(w=>({w,cn:cnMap[w]||''}));
+    wrongInSession=[];isReviewMode=true;isImmediateReviewMode=true;sessionUnitKey='__instant_review__';
+    document.getElementById('run-unit-name').textContent='🔁 本次错题再听写';
+    openScreen('screen-running');runDictation();
+}
+
+function buildCnMap(){
+    const map={};
+    Object.values(TEXTBOOK_DATA).forEach(g=>g.units.forEach(u=>u.words.forEach(item=>{if(typeof item==='object')map[item.w]=item.cn;})));
+    return map;
+}
+function renderMastered(){
+    const ud=getUserData();
+    const mastered=Object.entries(ud.masteredWords).filter(([,v])=>v&&v.mastered);
+    const el=document.getElementById('mastered-content');
+    if(mastered.length===0){el.innerHTML='<div class="empty-tip">还没有掌握的单词，加油听写！🌱</div>';return;}
+    const cnMap=buildCnMap();
+    el.innerHTML=`<div style="color:var(--sub);font-size:0.8rem;margin-bottom:8px;">共掌握 ${mastered.length} 个单词 🎉</div><div class="word-list-grid">`+
+        mastered.map(([w])=>`<div class="word-card"><div class="w">${w}</div>${cnMap[w]?`<div class="wc">${cnMap[w]}</div>`:''}<div class="cnt">已掌握 ⭐</div></div>`).join('')+`</div>`;
+}
+function renderErrors(){
+    const ud=getUserData();
+    const errors=Object.entries(ud.errorWords);
+    const el=document.getElementById('errors-content');
+    const btn=document.getElementById('error-review-btn');
+    const cnMap=buildCnMap();
+    if(errors.length===0){el.innerHTML='<div class="empty-tip">错题本是空的，你太厉害了！🌟</div>';btn.style.display='none';return;}
+    btn.style.display='block';
+    el.innerHTML=`<div style="color:var(--sub);font-size:0.8rem;margin-bottom:8px;">共 ${errors.length} 个错词，别忘了复习哦！</div><div class="word-list-grid">`+
+        errors.sort((a,b)=>b[1]-a[1]).map(([w,cnt])=>`<div class="word-card"><div class="w">${w}</div>${cnMap[w]?`<div class="wc">${cnMap[w]}</div>`:''}<div class="cnt">错了 ${cnt} 次</div></div>`).join('')+`</div>`;
+}
+
+(function init(){
+    try{var isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);if(isIOS)document.getElementById('iosTip').style.display='block';}catch(e){}
+    initLoginScreen();
+})();
+</script>
+</body>
+</html>
+
+
+
+
+
